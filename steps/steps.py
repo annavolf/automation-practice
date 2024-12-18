@@ -4,7 +4,8 @@ from behave import step
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
-# from selenium.webdriver.common.keys import Keys
+
+#from selenium.webdriver.common.keys import Keys
 
 #import api
 
@@ -137,3 +138,21 @@ def switch_to_home(context):
 @step("Close current window")
 def step_impl(context):
     context.driver.close()
+
+
+@step('Verify that xpath "{xpath}" should contain text "{expected_text}"')
+def step_impl(context, xpath, expected_text):
+      #element = WebDriverWait(context.driver, 10).until(EC.presence_of_element_located((By.XPATH, xpath)))
+      element =  context.driver.find_element(By.XPATH, xpath)
+      actual_text = element.text
+      print(f"Expected text: {expected_text}")
+      print(f"Actual text: {actual_text}")
+      # Assert the text matches exactly
+      assert actual_text == expected_text, f"Text does not match: '{actual_text}' != '{expected_text}'"
+      # Optionally assert that the expected text is contained in the actual text
+      assert expected_text in actual_text, f"Expected text '{expected_text}' not found in '{actual_text}'"
+
+
+@step('Wait for the element with xpath {xpath} to be present')
+def step_impl(context, xpath):
+    WebDriverWait(context.driver, 10).until(EC.presence_of_element_located(By.XPATH(xpath)))
